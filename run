@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ghc -o HaskellRogue Main.hs
+rm *.hi
+rm *.o
+./HaskellRogue
