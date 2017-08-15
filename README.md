@@ -9,5 +9,6 @@ To run, have GHC installed and type "./run" while in the HaskellRogue Directory.
 
 ## Built With
 
-* [Haskell](https://www.haskell.org) - Compiler
+* [Haskell](https://www.haskell.org) - Compiler for Haskell.
+* [Ansi-Terminal](https://hackage.haskell.org/package/ansi-terminal) - Only external library used.
 * [Moss Collums Original Code](https://github.com/moss/haskell-roguelike-challenge/tree/master/2-i-am-that-merry-wanderer-of-the-night) - My original inspiration for this project.
