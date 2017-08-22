@@ -19,7 +19,9 @@ module Main where
     main = do
         initScreen
         draw '@' (20, 20)
-        let e = Enemies {enemyPos=[(10, 4), (4, 10)], movedEnemies=False}
+        let e = Enemies {enemyPos=[(10, 4), (4, 10)],
+                         instructList=[((10, 4), [MoveUp, MoveLeft, MoveDown, MoveRight]), ((4, 10), [MoveDown, MoveUp])]
+                        }
         drawList 'X' (enemyPos e)
         userInput <- getContents
         let gs = GameState {
@@ -38,7 +40,9 @@ module Main where
     updateScreen curGS command = do
         let newPlayerPos = runCommand command (playerPos curGS)
         let newScreen = Screen {title=(title (screen curGS)), titlePos=(titlePos (screen curGS)), isPlayable=True, walls=(walls (screen curGS))}
-        let newEnemies = Enemies {enemyPos=map (moveEnemy (movedEnemies (enemies curGS))) (enemyPos (enemies curGS)), movedEnemies=(not (movedEnemies (enemies curGS)))}
+        let newEnemies = Enemies {enemyPos=map readInstruction (instructList (enemies curGS)),
+                                  instructList=(nextInstruct (instructList (enemies curGS)))
+                                 }
         let newGameState = GameState {playerPos=newPlayerPos, enemies=newEnemies, screen=newScreen}
         clear (playerPos curGS)
         clearList (enemyPos (enemies curGS))

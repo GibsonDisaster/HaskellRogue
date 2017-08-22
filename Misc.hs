@@ -32,31 +32,23 @@ module Misc where
        z >>= return
 
     digits :: Integral x => x -> [x]
-    digits 0 = [0]
+    digits 0 = []
     digits x = x `mod` 10 : digits (x `div` 10)
 
-    moveEnemy :: Bool -> Position -> Position
-    moveEnemy moved pos = if moved then runCommand MoveDown pos else runCommand MoveUp pos
+    nextPlace :: MoveInstructs -> Int -> Int
+    nextPlace mi p = undefined
 
-    -- Cannot use the following functions because of infection by IO Monad
+    nextInstruct :: MoveInstructs -> MoveInstructs
+    nextInstruct (x:xs) = xs ++ [(pos, next)]
+        where commandList = (snd x)
+              pos = (fst x)
+              next = (tail commandList)++[(head commandList)]
 
-    {- randMovement :: (Eq a, Num a) => [Position] -> a -> [Position]
-    randMovement pos rNum
-        | length pos == 0 = []
-        | rNum == 1 || rNum == 2 = [runCommand MoveUp x] ++ randMovement xs rNum   
-        | rNum == 3 || rNum == 4 = [runCommand MoveDown x] ++ randMovement xs rNum 
-        | rNum == 5 || rNum == 6 = [runCommand MoveLeft x] ++ randMovement xs rNum 
-        | rNum == 7 || rNum == 8 = [runCommand MoveRight x] ++ randMovement xs rNum
-        | rNum == 9 = [x] ++ randMovement xs rNum
-        | otherwise = []
-        where x = head pos
-              xs = tail pos -}
-
-    {- randMovement :: (Eq a, Num a) => Position -> a -> Position
-    randMovement pos rNum
-        | rNum == 1 || rNum == 2 = runCommand MoveUp pos
-        | rNum == 3 || rNum == 4 = runCommand MoveDown pos
-        | rNum == 5 || rNum == 6 = runCommand MoveLeft pos
-        | rNum == 7 || rNum == 8 = runCommand MoveRight pos
-        | rNum == 9 = pos
-        | otherwise = pos -} 
+    readInstruction :: (Position, [Command]) -> Position
+    readInstruction x
+     | cmd == MoveUp = runCommand MoveUp pos
+     | cmd == MoveDown = runCommand MoveDown pos
+     | cmd == MoveLeft = runCommand MoveLeft pos
+     | cmd == MoveRight = runCommand MoveRight pos
+        where cmd = head (snd x)
+              pos = fst x
