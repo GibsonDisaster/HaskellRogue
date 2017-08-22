@@ -16,9 +16,16 @@ module DataStructs where
                     isPlayable :: Bool,
                     walls :: [Position]
                   } deriving (Eq, Show)
+                  
+    data Enemies = Enemies {
+                      enemyPos :: [Position],
+                      movedEnemies :: Bool
+                      } deriving (Eq, Show)
 
     data GameState = GameState {
                         playerPos :: Position,
-                        enemyPos :: [Position],
+                        enemies :: Enemies,
                         screen :: Screen
                         } deriving (Eq, Show)
+
+    

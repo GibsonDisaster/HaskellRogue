@@ -19,12 +19,12 @@ module Main where
     main = do
         initScreen
         draw '@' (20, 20)
-        let ePos = [(10, 4), (4, 10)]
-        drawList 'X' ePos
+        let e = Enemies {enemyPos=[(10, 4), (4, 10)], movedEnemies=False}
+        drawList 'X' (enemyPos e)
         userInput <- getContents
         let gs = GameState {
                             playerPos=(20, 20), 
-                            enemyPos=ePos,
+                            enemies=e,
                             screen=(Screen {
                                             title="Haskell Rogue", 
                                             titlePos=(1, 2), 
@@ -38,14 +38,16 @@ module Main where
     updateScreen curGS command = do
         let newPlayerPos = runCommand command (playerPos curGS)
         let newScreen = Screen {title=(title (screen curGS)), titlePos=(titlePos (screen curGS)), isPlayable=True, walls=(walls (screen curGS))}
-        let newGameState = GameState {playerPos=newPlayerPos, enemyPos=(enemyPos curGS), screen=newScreen}
+        let newEnemies = Enemies {enemyPos=map (moveEnemy (movedEnemies (enemies curGS))) (enemyPos (enemies curGS)), movedEnemies=(not (movedEnemies (enemies curGS)))}
+        let newGameState = GameState {playerPos=newPlayerPos, enemies=newEnemies, screen=newScreen}
         clear (playerPos curGS)
+        clearList (enemyPos (enemies curGS))
         draw '@' newPlayerPos
-        drawList 'X' (enemyPos newGameState)
+        drawList 'X' (enemyPos (enemies newGameState))
         setCursorPosition 1 2
         putStr "Haskell Rogue"
         drawScreen newScreen
-        if length (filter (isAtPos (playerPos newGameState)) (enemyPos newGameState)) >= 1 then do 
+        if length (filter (isAtPos (playerPos newGameState)) (enemyPos (enemies newGameState))) >= 1 then do 
                                                                   clearScreen
                                                                   die "YOU DIED"
                                                                   else return newGameState

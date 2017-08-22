@@ -42,3 +42,12 @@ module Render where
         setCursorPosition x y
         putChar ' '
         setCursorPosition 26 0
+
+    clearList :: [Position] -> IO ()
+    clearList [] = do
+        setCursorPosition 900 900
+        putChar ' '
+    clearList (p:xs) = do
+        setCursorPosition (fst p) (snd p)
+        putChar ' '
+        clearList xs
